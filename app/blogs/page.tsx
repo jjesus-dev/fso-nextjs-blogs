@@ -9,7 +9,7 @@ const Blogs = async ({
 }) => {
   const { filter } = await searchParams;
   const searchTitle = filter && filter !== "";
-  const allBlogs = getBlogs();
+  const allBlogs = await getBlogs();
   const blogs = searchTitle
     ? allBlogs.filter((blog) => blog.title.includes(filter))
     : allBlogs;
