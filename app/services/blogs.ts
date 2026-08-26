@@ -22,3 +22,7 @@ export const incrementLikes = async (id: number) => {
     await db.update(blogs).set({ likes: blogLikes }).where(eq(blogs.id, id));
   }
 };
+
+export const getUsers = async () => {
+  return await db.query.users.findMany();
+};

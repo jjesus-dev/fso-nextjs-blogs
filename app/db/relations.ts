@@ -1,4 +1,4 @@
 import { defineRelations } from "drizzle-orm";
-import { blogs } from "./schema";
+import { blogs, users } from "./schema";
 
-export const relations = defineRelations({ blogs });
+export const relations = defineRelations({ blogs, users });
