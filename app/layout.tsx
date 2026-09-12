@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import AuthSessionProvider from "./components/SessionProvider";
+import NavBar from "./components/NavBar";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -10,16 +11,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en">
       <body>
-        <nav>
-          <Link href="/">Home</Link>
-          {" | "}
-          <Link href="/users">Users</Link>
-          {" | "}
-          <Link href="/blogs">Blogs</Link>
-          {" | "}
-          <Link href="/blogs/new">Create New</Link>
-        </nav>
-        {children}
+        <AuthSessionProvider>
+          <NavBar />
+          {children}
+        </AuthSessionProvider>
       </body>
     </html>
   );
