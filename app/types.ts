@@ -10,3 +10,18 @@ export type InitialStateType = {
     url: string;
   };
 };
+
+export type UserInitialStateType = {
+  errors: {
+    name: string | null;
+    username: string | null;
+    password: string | null;
+    passwordConfirm: string | null;
+  };
+  values: {
+    name: string;
+    username: string;
+    password: string;
+    passwordConfirm: string;
+  };
+};
