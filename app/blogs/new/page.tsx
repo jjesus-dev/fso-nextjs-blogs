@@ -1,10 +1,11 @@
 "use client";
 
-import { createBlog } from "@/app/actions/blogs";
 import { useActionState } from "react";
+import { createBlog } from "@/app/actions/blogs";
+import { InitialStateType } from "@/app/types";
 
-const NewBlog = () => {
-  const [state, formAction] = useActionState(createBlog, { error: "" });
+const NewBlog = (initialState: InitialStateType) => {
+  const [state, formAction] = useActionState(createBlog, initialState);
 
   return (
     <div>
@@ -13,25 +14,48 @@ const NewBlog = () => {
         <div>
           <label>
             Title:
-            <input type="text" name="title" required minLength={5} />
+            <input
+              type="text"
+              id="title"
+              name="title"
+              defaultValue={state.values?.title}
+            />
           </label>
         </div>
         <div>
           <label>
             Author:
-            <input type="text" name="author" required minLength={5} />
+            <input
+              type="text"
+              id="author"
+              name="author"
+              defaultValue={state.values?.author}
+            />
           </label>
         </div>
         <div>
           <label>
             Url:
-            <input type="text" name="url" required minLength={5} />
+            <input
+              type="text"
+              id="url"
+              name="url"
+              defaultValue={state.values?.url}
+            />
           </label>
         </div>
 
         <button type="submit">Create</button>
       </form>
-      {state.error && <p style={{ color: "red" }}>{state.error}</p>}
+      {state.errors?.errorTitle && (
+        <p style={{ color: "red" }}>{state.errors.errorTitle}</p>
+      )}
+      {state.errors?.errorAuthor && (
+        <p style={{ color: "red" }}>{state.errors.errorAuthor}</p>
+      )}
+      {state.errors?.errorUrl && (
+        <p style={{ color: "red" }}>{state.errors.errorUrl}</p>
+      )}
     </div>
   );
 };
