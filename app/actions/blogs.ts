@@ -23,6 +23,7 @@ export const createBlog = async (
     errorTitle: "",
     errorAuthor: "",
     errorUrl: "",
+    success: false,
   };
 
   if (!title || title.length < 5) {
@@ -42,13 +43,13 @@ export const createBlog = async (
     errors.errorAuthor !== "" ||
     errors.errorUrl !== ""
   ) {
-    return { errors, values: { title, author, url } };
+    return { errors, values: { title, author, url, success: false } };
   }
 
   await addBlog(title, author, url);
 
   revalidatePath("/blogs");
-  redirect("/blogs");
+  return { errors, values: { title, author, url, success: true } };
 };
 
 export const likeABlog = async (formData: FormData) => {

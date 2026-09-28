@@ -3,11 +3,13 @@ export type InitialStateType = {
     errorTitle: string;
     errorAuthor: string;
     errorUrl: string;
+    success?: boolean;
   };
   values: {
     title: string;
     author: string;
     url: string;
+    success?: boolean;
   };
 };
 

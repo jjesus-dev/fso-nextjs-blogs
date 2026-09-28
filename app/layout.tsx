@@ -1,6 +1,9 @@
+import "./globals.css"
 import type { Metadata } from "next";
 import AuthSessionProvider from "./components/SessionProvider";
 import NavBar from "./components/NavBar";
+import { NotificationProvider } from "./components/NotificationProvider";
+import Notification from "./components/Notification";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -10,10 +13,13 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en">
-      <body>
+      <body className="min-h-screen bg-background text-foreground">
         <AuthSessionProvider>
-          <NavBar />
-          {children}
+          <NotificationProvider>
+            <NavBar />
+            <Notification />
+            {children}
+          </NotificationProvider>
         </AuthSessionProvider>
       </body>
     </html>
