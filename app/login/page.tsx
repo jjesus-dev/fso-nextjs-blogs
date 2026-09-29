@@ -27,24 +27,42 @@ export default function LoginPage() {
   };
 
   return (
-    <div>
-      <h2>Login</h2>
+    <div className="max-w-2xl mx-auto my-2 p-6 rounded bg-gray-700">
+      <h2 className="text-2xl font-bold mb-4">Login</h2>
       {error && <p style={{ color: "red" }}>{error}</p>}
 
-      <form onSubmit={handleSubmit}>
+      <form
+        onSubmit={handleSubmit}
+        className="bg-gray-100 text-blue-400 p-2 mb-4 rounded flex items-center"
+      >
         <div>
           <label>
             Username:
-            <input type="username" name="username" required />
+            <input
+              type="username"
+              name="username"
+              required
+              className="bg-gray-400 border-stone-600 min-w-4/5 border-2 text-black mx-2 p-1 rounded"
+            />
           </label>
         </div>
         <div>
           <label>
             Password:
-            <input type="password" name="password" required />
+            <input
+              type="password"
+              name="password"
+              required
+              className="bg-gray-400 border-stone-600 min-w-4/5 border-2 text-black mx-2 p-1 rounded"
+            />
           </label>
         </div>
-        <button type="submit">Login</button>
+        <button
+          type="submit"
+          className="bg-sky-500 hover:bg-sky-700 text-white rounded p-1"
+        >
+          Login
+        </button>
       </form>
     </div>
   );

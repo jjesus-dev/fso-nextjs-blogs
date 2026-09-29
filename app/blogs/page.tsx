@@ -15,17 +15,28 @@ const Blogs = async ({
     : allBlogs;
 
   return (
-    <div>
-      <h2>Blogs</h2>
-      <Form action="">
-        <input name="filter" />
-        <button type="submit">Search</button>
+    <div className="max-w-2xl mx-auto my-2 p-6 rounded bg-gray-700">
+      <h2 className="text-2xl font-bold mb-4">Blogs</h2>
+      <Form action="" className="bg-gray-100 text-blue-400 p-2 mb-4 rounded">
+        <input
+          name="filter"
+          className="bg-gray-400 border-stone-600 min-w-4/5 border-2 text-black mx-2 p-1 rounded"
+        />
+        <button
+          type="submit"
+          className="bg-sky-500 hover:bg-sky-700 text-white rounded p-1"
+        >
+          Search
+        </button>
       </Form>
-      <ul>
+      <ul className="list-disc list-inside bg-gray-100 text-gray-800 mb-2 p-2 rounded">
         {blogs
           .sort((a, b) => b.likes - a.likes)
           .map((blog) => (
-            <li key={blog.id}>
+            <li
+              key={blog.id}
+              className="hover:bg-sky-600 hover:text-gray-100 p-1 rounded"
+            >
               <Link href={`/blogs/${blog.id}`}>{blog.title}</Link>
             </li>
           ))}
