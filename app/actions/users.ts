@@ -2,8 +2,9 @@
 
 import bcrypt from "bcryptjs";
 import { redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
 import { UserInitialStateType } from "../types";
-import { addUser, getUsername } from "../services/users";
+import { addUser, checkUserToken, getUsername, updateUserToken } from "../services/users";
 
 export const registerUser = async (
   prevState: UserInitialStateType,
@@ -63,4 +64,23 @@ export const registerUser = async (
   await addUser(username, name, passwordHash);
 
   redirect("/login");
+};
+
+export const getUserToken = async (username: string) => {
+  return await checkUserToken(username);
+}
+
+export const generateUserToken = async (formData: FormData) => {
+  const username = (formData.get("username") as string)?.trim();
+  //const oldToken = formData.get("token") as string;
+
+  const userExists = await getUsername(username);
+
+  if (userExists) {
+    const token = crypto.randomUUID();
+    await updateUserToken(username, token);
+
+    revalidatePath("/me");
+    redirect("/me");
+  }
 };
