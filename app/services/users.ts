@@ -24,6 +24,13 @@ export const getUsername = async (username: string) => {
   return false;
 };
 
+export const getUserFromToken = async (token: string) => {
+  return await db.query.users.findFirst({
+    where: { token: token },
+    with: { blogs: true },
+  });
+};
+
 export const addUser = async (
   username: string,
   name: string,
@@ -32,7 +39,7 @@ export const addUser = async (
   await db.insert(users).values({ username, name, passwordHash });
 };
 
-export const checkUserToken = async (username: string) => {
+export const getUserToken = async (username: string) => {
   const user = await db.query.users.findFirst({
     columns: { username: true, token: true },
     where: { username: username },

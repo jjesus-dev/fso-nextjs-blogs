@@ -3,7 +3,7 @@
 import { notFound } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
-import { generateUserToken, getUserToken } from "../actions/users";
+import { generateUserToken, getToken } from "../actions/users";
 
 export default function MePage() {
   const { data: session } = useSession();
@@ -17,7 +17,7 @@ export default function MePage() {
       notFound();
     }
 
-    getUserToken("mainuser").then(setUserInfo);
+    getToken(session.user?.email || "").then(setUserInfo);
   }, [session]);
 
   return (
