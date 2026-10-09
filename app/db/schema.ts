@@ -1,4 +1,10 @@
-import { integer, pgTable, serial, varchar } from "drizzle-orm/pg-core";
+import {
+  boolean,
+  integer,
+  pgTable,
+  serial,
+  varchar,
+} from "drizzle-orm/pg-core";
 
 export const blogs = pgTable("blogs", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
@@ -17,4 +23,15 @@ export const users = pgTable("users", {
   name: varchar({ length: 255 }).notNull(),
   passwordHash: varchar("password_hash", { length: 100 }).notNull().default(""),
   token: varchar({ length: 37 }),
+});
+
+export const readingList = pgTable("readingList", {
+  id: serial().primaryKey(),
+  read: boolean().notNull().default(false),
+  userId: integer("user_id")
+    .notNull()
+    .references(() => users.id),
+  blogId: integer("blog_id")
+    .notNull()
+    .references(() => blogs.id),
 });
