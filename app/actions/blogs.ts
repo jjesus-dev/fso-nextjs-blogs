@@ -2,7 +2,11 @@
 
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
-import { addBlog, incrementLikes } from "../services/blogs";
+import {
+  addBlogWithReadingList,
+  addToReadingList,
+  incrementLikes,
+} from "../services/blogs";
 import { auth } from "../auth";
 import { InitialStateType } from "../types";
 
@@ -46,15 +50,41 @@ export const createBlog = async (
     return { errors, values: { title, author, url, success: false } };
   }
 
-  await addBlog(title, author, url);
+  await addBlogWithReadingList(title, author, url);
 
   revalidatePath("/blogs");
   return { errors, values: { title, author, url, success: true } };
 };
 
-export const likeABlog = async (formData: FormData) => {
+export const updateBlogStatus = async (formData: FormData) => {
   const id = formData.get("id") as string;
-  await incrementLikes(Number(id));
+  const buttonPressed = formData.get("blogAction") as string;
+
+  const session = await auth();
+  if (!session) {
+    redirect("/login");
+  }
+
+  let listResult = [{ insertedId: -1 }];
+
+  switch (buttonPressed) {
+    case "like":
+      await incrementLikes(Number(id));
+      break;
+    case "list":
+      //console.log("Username:", session?.user?.email);
+      listResult = await addToReadingList(
+        Number(id),
+        session?.user?.email || "-1",
+      );
+      break;
+    default:
+      console.log("Unknown action");
+  }
+
+  if (listResult.length < 1 || listResult[0]?.insertedId === -1) {
+    console.log("Couldn't add to the reading list.");
+  }
 
   revalidatePath(`/blogs/${id}`);
   revalidatePath("/blogs");

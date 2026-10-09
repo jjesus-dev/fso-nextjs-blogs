@@ -1,7 +1,8 @@
 import { eq } from "drizzle-orm";
 import { db } from "../db";
-import { blogs } from "../db/schema";
+import { blogs, readingList } from "../db/schema";
 import { getCurrentUser } from "./session";
+import { getUserId } from "./users";
 
 export const getBlogs = async () => {
   return await db.query.blogs.findMany();
@@ -21,6 +22,31 @@ export const addBlog = async (title: string, author: string, url: string) => {
   await db.insert(blogs).values({ title, author, url, userId: user?.id });
 };
 
+export const addBlogWithReadingList = async (
+  title: string,
+  author: string,
+  url: string,
+) => {
+  const user = await getCurrentUser();
+
+  if (!user) {
+    throw new Error("Not logged in");
+  }
+
+  const blogId = await db
+    .insert(blogs)
+    .values({ title, author, url, userId: user?.id })
+    .returning({ insertedId: blogs.id });
+
+  if (blogId.length > 0) {
+    await db
+      .insert(readingList)
+      .values({ userId: user?.id, blogId: blogId[0].insertedId });
+  } else {
+    throw new Error("Missing id (blog)");
+  }
+};
+
 export const incrementLikes = async (id: number) => {
   const blog = await getBlogById(id);
 
@@ -28,4 +54,37 @@ export const incrementLikes = async (id: number) => {
     const blogLikes = blog.likes + 1;
     await db.update(blogs).set({ likes: blogLikes }).where(eq(blogs.id, id));
   }
+};
+
+export const addToReadingList = async (blogId: number, username: string) => {
+  const blog = await getBlogById(blogId);
+
+  // Check if user exists
+  const userId = await getUserId(username);
+
+  if (blog && userId >= 0) {
+    return await db
+      .insert(readingList)
+      .values({ blogId, userId })
+      .returning({ insertedId: readingList.id });
+  }
+
+  return [{ insertedId: -1 }];
+};
+
+export const checkReadingList = async (blogId: number, username: string) => {
+  // Check if user exists
+  const userId = await getUserId(username);
+
+  if (userId >= 0) {
+    const readingList = await db.query.readingList.findFirst({
+      where: { blogId: blogId, userId: userId },
+    });
+
+    if (readingList?.userId) {
+      return true;
+    }
+  }
+
+  return false;
 };

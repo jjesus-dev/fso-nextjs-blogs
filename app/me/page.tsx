@@ -1,16 +1,27 @@
 "use client";
 
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { generateUserToken, getToken } from "../actions/users";
+import { getReadingListByUser } from "../actions/readingLists";
+
+type ReadingList = {
+  id: number;
+  userId: number;
+  read: boolean;
+  blogId: number;
+  blog: { title: string; author: string; url: string } | null;
+};
 
 export default function MePage() {
   const { data: session } = useSession();
-  const [userInfo, setUserInfo] = useState<any>(null);
-
-  // const { showNotification } = useNotification();
-  // const router = useRouter();
+  const [userInfo, setUserInfo] = useState<{
+    username: string;
+    token: string | null;
+  }>({ username: "", token: "" });
+  const [readingList, setReadingList] = useState<ReadingList[]>();
 
   useEffect(() => {
     if (!session) {
@@ -18,6 +29,14 @@ export default function MePage() {
     }
 
     getToken(session.user?.email || "").then(setUserInfo);
+
+    const fetchList = async () => {
+      await getReadingListByUser(session.user?.email || "-1").then(
+        setReadingList,
+      );
+    };
+
+    fetchList();
   }, [session]);
 
   return (
@@ -33,6 +52,21 @@ export default function MePage() {
           {session?.user?.email}
         </p>
         <hr className="my-4" />
+        <div>
+          <h3 className="text-2xl font-bold mb-4">Reading List</h3>
+          <ul>
+            {readingList &&
+              readingList.map((rl) => (
+                <li
+                  key={rl.id}
+                  className="text-sky-500 hover:text-sky-300 hover:underline"
+                >
+                  <Link href={`/blogs/${rl.blogId}`}>{rl.blog?.title}</Link>
+                </li>
+              ))}
+          </ul>
+        </div>
+        <hr className="my-4" />
         <h3 className="text-2xl font-bold mb-4">API Token</h3>
         <form action={generateUserToken}>
           <div className="bg-gray-300 p-3 rounded">
@@ -40,7 +74,7 @@ export default function MePage() {
               type="text"
               id="username"
               name="username"
-              defaultValue={userInfo?.username || ""}
+              defaultValue={userInfo?.username}
               readOnly={true}
               hidden={true}
               className="bg-gray-400 text-gray-200 border-stone-400 border-2 mx-2 p-1 rounded min-w-3/5 hidden"

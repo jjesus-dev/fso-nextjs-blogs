@@ -24,6 +24,17 @@ export const getUsername = async (username: string) => {
   return false;
 };
 
+export const getUserId = async (username: string) => {
+  const user = await db.query.users.findFirst({
+    columns: { id: true },
+    where: { username: username },
+  });
+
+  if (user?.id) return user?.id;
+
+  return -1;
+};
+
 export const getUserFromToken = async (token: string) => {
   return await db.query.users.findFirst({
     where: { token: token },
