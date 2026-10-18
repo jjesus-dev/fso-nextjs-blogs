@@ -5,7 +5,7 @@ import { notFound } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { generateUserToken, getToken } from "../actions/users";
-import { getReadingListByUser } from "../actions/readingLists";
+import { getReadingListByUser, markAsRead } from "../actions/readingLists";
 
 type ReadingList = {
   id: number;
@@ -54,17 +54,67 @@ export default function MePage() {
         <hr className="my-4" />
         <div>
           <h3 className="text-2xl font-bold mb-4">Reading List</h3>
-          <ul>
-            {readingList &&
-              readingList.map((rl) => (
-                <li
-                  key={rl.id}
-                  className="text-sky-500 hover:text-sky-300 hover:underline"
-                >
-                  <Link href={`/blogs/${rl.blogId}`}>{rl.blog?.title}</Link>
-                </li>
-              ))}
-          </ul>
+          <div>
+            <h4 className="text-xl font-bold mb-4">
+              Unread ({readingList?.filter((b) => b.read === false).length})
+            </h4>
+            <div className="mb-5">
+              <ul>
+                {readingList &&
+                  readingList
+                    .filter((b) => b.read === false)
+                    .map((rl) => (
+                      <li
+                        key={rl.id}
+                        className="flex items-center gap-2 bg-amber-200 my-2 p-2 rounded-md"
+                      >
+                        <Link
+                          href={`/blogs/${rl.blogId}`}
+                          className="text-sky-700 hover:text-sky-500 hover:underline"
+                        >
+                          {rl.blog?.title}
+                        </Link>{" "}
+                        <form action={markAsRead} className="ml-auto">
+                          <button
+                            type="submit"
+                            name="readBlog"
+                            value={`bl-${rl.blogId}`}
+                            className="text-gray-700 font-bold bg-green-500 hover:text-gray-400 hover:bg-green-400 p-2 rounded-md"
+                          >
+                            mark as read
+                          </button>
+                        </form>
+                      </li>
+                    ))}
+              </ul>
+            </div>
+          </div>
+
+          <div>
+            <h4 className="text-xl font-bold mb-4">
+              Read ({readingList?.filter((b) => b.read === true).length})
+            </h4>
+            <div>
+              <ul>
+                {readingList &&
+                  readingList
+                    .filter((b) => b.read === true)
+                    .map((rl) => (
+                      <li
+                        key={rl.id}
+                        className="flex items-center gap-2 bg-teal-100 my-2 p-2 rounded-md"
+                      >
+                        <Link
+                          href={`/blogs/${rl.blogId}`}
+                          className="text-sky-700 hover:text-sky-500 hover:underline"
+                        >
+                          {rl.blog?.title}
+                        </Link>
+                      </li>
+                    ))}
+              </ul>
+            </div>
+          </div>
         </div>
         <hr className="my-4" />
         <h3 className="text-2xl font-bold mb-4">API Token</h3>
