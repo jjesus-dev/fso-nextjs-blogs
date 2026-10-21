@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui"
   },
   "dependencies": {
     "@mdx-js/loader": "^3.1.1",
@@ -15,7 +17,7 @@
     "@next/mdx": "^16.4.2",
     "@types/mdx": "^2.0.14",
     "bcryptjs": "^3.0.3",
-    "dotenv": "^17.4.2",
+    "dotenv": "^18.0.8",
     "drizzle-orm": "1.0.0-rc.4",
     "next": "16.3.0",
     "next-auth": "5.0.0-beta.32",
@@ -25,6 +27,7 @@
     "zod": "^4.6.2"
   },
   "devDependencies": {
+    "@playwright/test": "^1.64.1",
     "@tailwindcss/postcss": "^4.3.3",
     "@types/node": "^20",
     "@types/pg": "^8.23.1",
