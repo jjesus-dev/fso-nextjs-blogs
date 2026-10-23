@@ -15,10 +15,7 @@ const BlogPage = async ({ params }: { params: Promise<{ id: string }> }) => {
 
   const session = await auth();
   if (session?.user?.email) {
-    inReadingList = await checkReadingList(
-      Number(id),
-      session?.user?.email || "-1",
-    );
+    inReadingList = await checkReadingList(Number(id));
   }
 
   return (
