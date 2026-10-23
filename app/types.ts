@@ -27,3 +27,11 @@ export type UserInitialStateType = {
     passwordConfirm: string;
   };
 };
+
+export type ReadingListType = {
+  id: number;
+  userId: number;
+  read: boolean;
+  blogId: number;
+  blog: { title: string; author: string; url: string } | null;
+};

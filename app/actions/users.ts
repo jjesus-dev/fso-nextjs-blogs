@@ -6,10 +6,11 @@ import { revalidatePath } from "next/cache";
 import { UserInitialStateType } from "../types";
 import {
   addUser,
-  getUsername,
-  getUserToken,
+  checkIfUserExists,
+  getUserWithToken,
   updateUserToken,
 } from "../services/users";
+import { auth } from "../auth";
 
 export const registerUser = async (
   prevState: UserInitialStateType,
@@ -41,7 +42,7 @@ export const registerUser = async (
     passwordConfirmError = "Passwords don't match.";
   }
 
-  const userExists = await getUsername(username);
+  const userExists = await checkIfUserExists(username);
 
   if (userExists) {
     usernameError = "Username already exists.";
@@ -72,20 +73,17 @@ export const registerUser = async (
 };
 
 export const getToken = async (username: string) => {
-  return await getUserToken(username);
+  return await getUserWithToken(username);
 };
 
-export const generateUserToken = async (formData: FormData) => {
-  const username = (formData.get("username") as string)?.trim();
-  //const oldToken = formData.get("token") as string;
+export const generateUserToken = async () => {
+  const session = await auth();
+  const username = session?.user?.email;
 
-  const userExists = await getUsername(username);
+  if (!username) redirect("/login");
 
-  if (userExists) {
-    const token = crypto.randomUUID();
-    await updateUserToken(username, token);
+  const token = crypto.randomUUID();
+  await updateUserToken(username, token);
 
-    revalidatePath("/me");
-    redirect("/me");
-  }
+  revalidatePath("/me");
 };

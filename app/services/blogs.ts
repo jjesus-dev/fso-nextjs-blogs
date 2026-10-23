@@ -2,7 +2,6 @@ import { eq } from "drizzle-orm";
 import { db } from "../db";
 import { blogs, readingList } from "../db/schema";
 import { getCurrentUser } from "./session";
-import { getUserId } from "./users";
 
 export const getBlogs = async () => {
   return await db.query.blogs.findMany();
@@ -56,29 +55,37 @@ export const incrementLikes = async (id: number) => {
   }
 };
 
-export const addToReadingList = async (blogId: number, username: string) => {
+export const addToReadingList = async (blogId: number) => {
   const blog = await getBlogById(blogId);
 
   // Check if user exists
-  const userId = await getUserId(username);
+  const user = await getCurrentUser();
 
-  if (blog && userId >= 0) {
+  if (!user) {
+    throw new Error("Not logged in");
+  }
+
+  if (blog && user.id >= 0) {
     return await db
       .insert(readingList)
-      .values({ blogId, userId })
+      .values({ blogId, userId: user.id })
       .returning({ insertedId: readingList.id });
   }
 
   return [{ insertedId: -1 }];
 };
 
-export const checkReadingList = async (blogId: number, username: string) => {
+export const checkReadingList = async (blogId: number) => {
   // Check if user exists
-  const userId = await getUserId(username);
+  const user = await getCurrentUser();
 
-  if (userId >= 0) {
+  if (!user) {
+    throw new Error("Not logged in");
+  }
+
+  if (user.id >= 0) {
     const readingList = await db.query.readingList.findFirst({
-      where: { blogId: blogId, userId: userId },
+      where: { blogId: blogId, userId: user.id },
     });
 
     if (readingList?.userId) {

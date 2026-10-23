@@ -72,11 +72,7 @@ export const updateBlogStatus = async (formData: FormData) => {
       await incrementLikes(Number(id));
       break;
     case "list":
-      //console.log("Username:", session?.user?.email);
-      listResult = await addToReadingList(
-        Number(id),
-        session?.user?.email || "-1",
-      );
+      listResult = await addToReadingList(Number(id));
       break;
     default:
       console.log("Unknown action");

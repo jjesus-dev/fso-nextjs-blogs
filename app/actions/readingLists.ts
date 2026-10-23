@@ -4,11 +4,8 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { auth } from "../auth";
 import { getReadingListWithBlog, readBlog } from "../services/readingLists";
-import { getUserId } from "../services/users";
 
-export const getReadingListByUser = async (username: string) => {
-  const userId = await getUserId(username);
-
+export const getReadingListByUser = async (userId: number) => {
   const readingList = await getReadingListWithBlog(userId);
   return readingList;
 };

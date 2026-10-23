@@ -13,7 +13,7 @@ export const getUserWithBlogs = async (username: string) => {
   });
 };
 
-export const getUsername = async (username: string) => {
+export const checkIfUserExists = async (username: string) => {
   const user = await db.query.users.findFirst({
     columns: { username: true },
     where: { username: username },
@@ -24,15 +24,15 @@ export const getUsername = async (username: string) => {
   return false;
 };
 
-export const getUserId = async (username: string) => {
+export const getUserWithToken = async (username: string) => {
   const user = await db.query.users.findFirst({
-    columns: { id: true },
+    columns: { username: true, token: true },
     where: { username: username },
   });
 
-  if (user?.id) return user?.id;
+  if (user) return user;
 
-  return -1;
+  return { username: "", token: "" };
 };
 
 export const getUserFromToken = async (token: string) => {
@@ -48,17 +48,6 @@ export const addUser = async (
   passwordHash: string,
 ) => {
   await db.insert(users).values({ username, name, passwordHash });
-};
-
-export const getUserToken = async (username: string) => {
-  const user = await db.query.users.findFirst({
-    columns: { username: true, token: true },
-    where: { username: username },
-  });
-
-  if (user) return user;
-
-  return { username: "", token: "" };
 };
 
 export const updateUserToken = async (username: string, token: string) => {

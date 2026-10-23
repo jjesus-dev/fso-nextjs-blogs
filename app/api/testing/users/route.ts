@@ -1,7 +1,7 @@
 import bcrypt from "bcryptjs";
 import { NextRequest, NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
-import { addUser, getUsername } from "@/app/services/users";
+import { addUser, checkIfUserExists } from "@/app/services/users";
 
 export const POST = async (req: NextRequest) => {
   if (process.env.NODE_ENV === "production") {
@@ -30,7 +30,7 @@ export const POST = async (req: NextRequest) => {
     passwordError = "Password must be at least 4 characters long.";
   }
 
-  const userExists = await getUsername(username);
+  const userExists = await checkIfUserExists(username);
 
   if (userExists) {
     return NextResponse.json(
