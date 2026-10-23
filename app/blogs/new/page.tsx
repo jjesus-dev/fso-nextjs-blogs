@@ -35,7 +35,7 @@ const NewBlog = () => {
       >
         <div className="mx-0.5 my-2 text-right max-w-4/5">
           <label>
-            Title:
+            Title
             <input
               type="text"
               id="title"
@@ -47,7 +47,7 @@ const NewBlog = () => {
         </div>
         <div className="mx-0.5 my-2 text-right max-w-4/5">
           <label>
-            Author:
+            Author
             <input
               type="text"
               id="author"
@@ -59,7 +59,7 @@ const NewBlog = () => {
         </div>
         <div className="mx-0.5 my-2 text-right max-w-4/5">
           <label>
-            Url:
+            URL
             <input
               type="text"
               id="url"
@@ -72,6 +72,7 @@ const NewBlog = () => {
 
         <button
           type="submit"
+          data-testid="create-blog-button"
           className="mx-44 bg-sky-500 hover:bg-sky-700 text-white rounded p-1"
         >
           Create

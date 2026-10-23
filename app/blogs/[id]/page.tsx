@@ -22,10 +22,18 @@ const BlogPage = async ({ params }: { params: Promise<{ id: string }> }) => {
   }
 
   return (
-    <div className="max-w-3xl mx-auto my-2 p-6 rounded bg-gray-700">
-      <h2 className="text-3xl font-bold mb-4 text-center">{blog.title}</h2>
+    <div
+      className="max-w-3xl mx-auto my-2 p-6 rounded bg-gray-700"
+      data-testid="blog-detail"
+    >
+      <h2
+        className="text-3xl font-bold mb-4 text-center"
+        data-testid="blog-title"
+      >
+        {blog.title}
+      </h2>
       <div className="bg-gray-100 text-gray-800 mb-2 p-2 rounded">
-        <p>Written by {blog.author}</p>
+        <p data-testid="blog-author">Written by {blog.author}</p>
         <p>
           <a
             href={blog.url}
@@ -50,6 +58,7 @@ const BlogPage = async ({ params }: { params: Promise<{ id: string }> }) => {
           {session?.user && !inReadingList && (
             <button
               type="submit"
+              data-testid="add-to-reading-list-button"
               name="blogAction"
               value="list"
               className="bg-green-700 hover:bg-green-500 text-white rounded p-1.5 mx-2"

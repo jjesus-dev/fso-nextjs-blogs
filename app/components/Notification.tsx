@@ -15,6 +15,7 @@ export default function Notification() {
     <div
       className="mx-auto mb-2.5 px-4 py-2.5 rounded-sm text-white"
       style={style}
+      data-testid="notification"
     >
       {message}
     </div>

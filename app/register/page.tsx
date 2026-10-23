@@ -16,7 +16,7 @@ export default function RegisterPage(initialState: UserInitialStateType) {
       >
         <div className="mx-0.5 my-2 text-right max-w-4/5">
           <label>
-            Name:
+            Name
             <input
               type="text"
               id="name"
@@ -28,7 +28,7 @@ export default function RegisterPage(initialState: UserInitialStateType) {
         </div>
         <div className="mx-0.5 my-2 text-right max-w-4/5">
           <label>
-            Username:
+            Username
             <input
               type="text"
               id="username"
@@ -40,7 +40,7 @@ export default function RegisterPage(initialState: UserInitialStateType) {
         </div>
         <div className="mx-0.5 my-2 text-right max-w-4/5">
           <label>
-            Password:
+            Password
             <input
               type="password"
               id="password"
@@ -52,7 +52,7 @@ export default function RegisterPage(initialState: UserInitialStateType) {
         </div>
         <div className="mx-0.5 my-2 text-right max-w-4/5">
           <label>
-            Confirm Password:
+            Confirm Password
             <input
               type="password"
               id="passwordConfirm"
@@ -64,6 +64,7 @@ export default function RegisterPage(initialState: UserInitialStateType) {
         </div>
         <button
           type="submit"
+          data-testid="register-button"
           className="mx-44 bg-sky-500 hover:bg-sky-700 text-white rounded p-1"
         >
           Register
@@ -73,13 +74,17 @@ export default function RegisterPage(initialState: UserInitialStateType) {
         <p style={{ color: "red" }}>{state.errors.name}</p>
       )}
       {state.errors?.username && (
-        <p style={{ color: "red" }}>{state.errors.username}</p>
+        <p style={{ color: "red" }} data-testid="username-error">
+          {state.errors.username}
+        </p>
       )}
       {state.errors?.password && (
         <p style={{ color: "red" }}>{state.errors.password}</p>
       )}
       {state.errors?.passwordConfirm && (
-        <p style={{ color: "red" }}>{state.errors.passwordConfirm}</p>
+        <p style={{ color: "red" }} data-testid="passwordConfirm-error">
+          {state.errors.passwordConfirm}
+        </p>
       )}
     </div>
   );

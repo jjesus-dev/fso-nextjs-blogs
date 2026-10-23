@@ -3,8 +3,10 @@
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { useNotification } from "@/app/components/NotificationProvider";
 
 export default function LoginPage() {
+  const { showNotification } = useNotification();
   const router = useRouter();
   const [error, setError] = useState("");
 
@@ -21,6 +23,7 @@ export default function LoginPage() {
     if (result?.error) {
       setError("Invalid username or password");
     } else {
+      showNotification("Welcome!");
       router.push("/");
       router.refresh();
     }
@@ -29,7 +32,11 @@ export default function LoginPage() {
   return (
     <div className="max-w-2xl mx-auto my-2 p-6 rounded bg-gray-700">
       <h2 className="text-2xl font-bold mb-4">Login</h2>
-      {error && <p style={{ color: "red" }}>{error}</p>}
+      {error && (
+        <p style={{ color: "red" }} data-testid="error-message">
+          {error}
+        </p>
+      )}
 
       <form
         onSubmit={handleSubmit}
@@ -37,7 +44,7 @@ export default function LoginPage() {
       >
         <div>
           <label>
-            Username:
+            Username
             <input
               type="username"
               name="username"
@@ -48,7 +55,7 @@ export default function LoginPage() {
         </div>
         <div>
           <label>
-            Password:
+            Password
             <input
               type="password"
               name="password"
@@ -59,6 +66,7 @@ export default function LoginPage() {
         </div>
         <button
           type="submit"
+          data-testid="login-button"
           className="bg-sky-500 hover:bg-sky-700 text-white rounded p-1"
         >
           Login
